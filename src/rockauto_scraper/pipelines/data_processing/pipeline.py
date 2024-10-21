@@ -9,6 +9,7 @@ from .nodes import (
     consolidate_and_save_to_excel,
     read_and_split_oem_data,
     run_spiders_in_parallel,
+    send_email_with_file_link,
 )
 
 
@@ -33,5 +34,11 @@ def create_pipeline(**kwargs) -> Pipeline:
                 outputs="excel_output",
                 name="consolidate_and_save_to_excel_node"
             ),
+            node(
+                func=send_email_with_file_link,
+                inputs=["excel_output", "params:recipient"],
+                outputs=None,
+                name="send_email_with_file_link_node"
+            )
         ]
     )
