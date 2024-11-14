@@ -4,13 +4,13 @@
 # Link: https://docs.kedro.org/en/stable/data/data_catalog.html
 oem_data:
   type: pandas.CSVDataset
-  filepath: abfs://impressa-oems/oems_test.csv
+  filepath: abfs://impressa-oems/oems_test_100k.csv
   load_args:
     header:
     names:
       - marca
       - oem
-    sep: ';'
+    sep: ','
   credentials: azure_blob_credentials
 
 excel_output:

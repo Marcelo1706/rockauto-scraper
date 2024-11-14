@@ -4,7 +4,7 @@ import scrapy
 class OemSpider(scrapy.Spider):
     name = "oem_spider"
     allowed_domains = ["rockauto.com"]
-    max_retries = 5
+    max_retries = 3
 
     def __init__(self, oem_list=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -25,7 +25,7 @@ class OemSpider(scrapy.Spider):
             )
 
     def parse(self, response):
-        if response.status == 302:
+        if response.status in (302, 404, 502):
             retries = self.retries.setdefault(response.url, 0)
             if retries < self.max_retries:
                 self.retries[response.url] += 1
@@ -34,6 +34,15 @@ class OemSpider(scrapy.Spider):
                 self.logger.error(
                     "%s still returns 302 responses after %s retries", response.url, retries
                 )
+                yield {
+                    "oem": response.meta["oem"],
+                    "manufacturer": None,
+                    "partnumber": None,
+                    "category": None,
+                    "description": "No se pudo extraer los datos de la página, se ha excedido el número de intentos",
+                    "link": response.url,
+                    "replaces": None,
+                }
             return
 
         parts = response.css("td.listing-inner-content")
@@ -45,7 +54,7 @@ class OemSpider(scrapy.Spider):
                 "category": part.css("span.listing-footnote-text::text").get(),
                 "description": part.css("span.span-link-underline-remover::text").get(),
                 "link": response.url,
-                "replaces": part.xpath(
-                    '//span[@title="Reemplaza estos números alternativos/ números de Equipo Original"]/text()'
+                "replaces": part.css(
+                    'span[title="Reemplaza estos números alternativos/ números de Equipo Original"]::text'
                 ).get(),
             }
