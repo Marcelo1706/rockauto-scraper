@@ -39,13 +39,25 @@ class OemSpider(scrapy.Spider):
                     "manufacturer": None,
                     "partnumber": None,
                     "category": None,
-                    "description": "No se pudo extraer los datos de la página, se ha excedido el número de intentos",
+                    "description": f"Error de conexión, tras {retries} intentos fallidos",
                     "link": response.url,
                     "replaces": None,
                 }
             return
 
         parts = response.css("td.listing-inner-content")
+
+        if len(parts == 0):
+            yield {
+                "oem": response.meta["oem"],
+                "manufacturer": None,
+                "partnumber": None,
+                "category": None,
+                "description": "No se encontraron resultados",
+                "link": response.url,
+                "replaces": None,
+            }
+
         for part in parts:
             yield {
                 "oem": response.meta["oem"],
