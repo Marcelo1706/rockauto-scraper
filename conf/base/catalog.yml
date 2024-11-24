@@ -4,24 +4,26 @@
 # Link: https://docs.kedro.org/en/stable/data/data_catalog.html
 oem_data:
   type: pandas.CSVDataset
-  filepath: abfs://impressa-oems/oems_test_100k.csv
+  filepath: abfs://impressa-oems/oems_test.csv
   load_args:
     header:
     names:
       - marca
       - oem
-    sep: ','
+    sep: ";"
   credentials: azure_blob_credentials
 
 excel_output:
-  type: pandas.ExcelDataset
-  filepath: abfs://results/resultados.xlsx
+  type: pandas.CSVDataset
+  filepath: abfs://results/resultados_test.csv
   credentials: azure_blob_credentials
   save_args:
     index: False
-    engine: openpyxl
+    sep: ";"
+    encoding: utf-8-sig
   versioned: True
 
 scraping_results:
   type: kedro_datasets.json.JSONDataset
   filepath: data/01_raw/rockauto.json
+  

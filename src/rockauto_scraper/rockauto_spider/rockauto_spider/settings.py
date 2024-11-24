@@ -94,3 +94,4 @@ FEED_EXPORT_ENCODING = "utf-8"
 
 # Job directory
 JOBDIR = "job_info"
+RETRY_TIMES = 9

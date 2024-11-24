@@ -4,7 +4,7 @@ import scrapy
 class OemSpider(scrapy.Spider):
     name = "oem_spider"
     allowed_domains = ["rockauto.com"]
-    max_retries = 3
+    max_retries = 10
 
     def __init__(self, oem_list=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -47,7 +47,7 @@ class OemSpider(scrapy.Spider):
 
         parts = response.css("td.listing-inner-content")
 
-        if len(parts == 0):
+        if not parts:
             yield {
                 "oem": response.meta["oem"],
                 "manufacturer": None,

@@ -85,7 +85,7 @@ def send_email_with_file_link(excel_output, recipient):
     )
 
     # Listar blobs en el contenedor para encontrar la versión más reciente
-    blobs = container_client.list_blobs(name_starts_with="resultados.xlsx/")
+    blobs = container_client.list_blobs(name_starts_with="resultados_test.csv/")
     latest_blob = max(blobs, key=lambda b: b.name)
 
     file_url = f"https://{storage_account_name}.blob.core.windows.net/{container_name}/{latest_blob.name}"
