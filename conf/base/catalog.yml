@@ -17,13 +17,9 @@ excel_output:
   type: pandas.CSVDataset
   filepath: abfs://results/resultados_test.csv
   credentials: azure_blob_credentials
-  save_args:
-    index: False
-    sep: ";"
-    encoding: utf-8-sig
   versioned: True
 
 scraping_results:
   type: kedro_datasets.json.JSONDataset
   filepath: data/01_raw/rockauto.json
-  
+
