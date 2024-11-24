@@ -21,5 +21,7 @@ excel_output:
 
 scraping_results:
   type: kedro_datasets.json.JSONDataset
-  filepath: data/01_raw/rockauto.json
+  filepath: abfs://json-data/scraping_results.json
+  credentials: azure_blob_credentials
+  versioned: True
 
