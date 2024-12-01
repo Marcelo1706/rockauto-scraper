@@ -4,7 +4,7 @@ import scrapy
 class OemSpider(scrapy.Spider):
     name = "oem_spider"
     allowed_domains = ["rockauto.com"]
-    max_retries = 10
+    max_retries = 2
 
     def __init__(self, oem_list=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
