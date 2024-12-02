@@ -7,9 +7,10 @@ class OemSpider(scrapy.Spider):
     allowed_domains = ["rockauto.com"]
     max_retries = 5
 
-    def __init__(self, oem_list=None, *args, **kwargs):
+    def __init__(self, oem_list=None, proxy=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.oem_list = oem_list
+        self.proxy = proxy
         self.retries = {}
 
     @classmethod
@@ -27,13 +28,13 @@ class OemSpider(scrapy.Spider):
                 callback=self.parse,
                 meta={
                     "oem": oem,
-                    "proxy": "http://brd-customer-hl_2fc871a8-zone-datacenter_proxy1:r3miq3roxhg9@brd.superproxy.io:33335",
+                    "proxy": self.proxy,
                     "handle_httpstatus_list": [302, 404, 502],
                 },
             )
 
     def parse(self, response):
-        if response.status in (302, 404, 502):
+        if response.status in response.meta["handle_httpstatus_list"]:
             retries = self.retries.setdefault(response.url, 0)
             if retries < self.max_retries:
                 self.retries[response.url] += 1

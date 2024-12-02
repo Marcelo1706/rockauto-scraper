@@ -43,11 +43,16 @@ def run_spiders_in_parallel(*oem_splits):
     settings = get_project_settings()
     process = CrawlerProcess(settings)
 
-    for oem_list in oem_lists:
+    conf_path = str(Path.cwd() / "conf")
+    conf_loader = OmegaConfigLoader(conf_source=conf_path)
+    credentials = conf_loader.get("credentials")
+    proxies = credentials["proxies"]
+
+    for i, oem_list in enumerate(oem_lists):
         crawler = Crawler(OemSpider)
         crawler.signals.connect(collect_items, signal=signals.item_scraped)
-        process.crawl(crawler, oem_list=oem_list)
-        logger.info(f"Starting spider for {len(oem_list)} OEMs")
+        process.crawl(crawler, oem_list=oem_list, proxy=proxies[i])
+        logger.info(f"Starting spider for {len(oem_list)} OEMs with proxy {proxies[i]}")
 
     process.start()
     logger.info(f"Items scraped: {len(items)}")
