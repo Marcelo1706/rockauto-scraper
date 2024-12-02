@@ -1,15 +1,23 @@
 import scrapy
+from scrapy.settings import BaseSettings
 
 
 class OemSpider(scrapy.Spider):
     name = "oem_spider"
     allowed_domains = ["rockauto.com"]
-    max_retries = 2
+    max_retries = 5
 
     def __init__(self, oem_list=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.oem_list = oem_list
         self.retries = {}
+
+    @classmethod
+    def update_settings(cls, settings: BaseSettings) -> None:
+        super().update_settings(settings)
+        settings.set("FEED_EXPORT_ENCODING", "utf-8")
+        settings.set("RETRY_TIMES", 5)
+        settings.set("RETRY_HTTP_CODES", [302, 404, 502])
 
     def start_requests(self):
         for oem in self.oem_list:
@@ -19,7 +27,7 @@ class OemSpider(scrapy.Spider):
                 callback=self.parse,
                 meta={
                     "oem": oem,
-                    "proxy": "http://127.0.0.1:24000",
+                    "proxy": "http://brd-customer-hl_2fc871a8-zone-datacenter_proxy1:r3miq3roxhg9@brd.superproxy.io:33335",
                     "handle_httpstatus_list": [302, 404, 502],
                 },
             )

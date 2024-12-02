@@ -4,7 +4,7 @@
 # Link: https://docs.kedro.org/en/stable/data/data_catalog.html
 oem_data:
   type: pandas.CSVDataset
-  filepath: abfs://impressa-oems/oems.csv
+  filepath: abfs://impressa-oems/remaining_oems_1.csv
   load_args:
     header:
     names:
@@ -24,4 +24,5 @@ scraping_results:
   filepath: abfs://json-data/scraping_results.json
   credentials: azure_blob_credentials
   versioned: True
-
+  save_args:
+    ensure_ascii: False
