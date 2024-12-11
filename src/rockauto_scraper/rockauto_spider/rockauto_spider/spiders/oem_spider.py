@@ -41,7 +41,7 @@ class OemSpider(scrapy.Spider):
                 yield response.request.replace(dont_filter=True)
             else:
                 self.logger.error(
-                    "%s still returns 302 responses after %s retries", response.url, retries
+                    "%s still returns error after %s retries", response.url, retries
                 )
                 yield {
                     "oem": response.meta["oem"],
