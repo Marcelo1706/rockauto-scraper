@@ -97,3 +97,32 @@ To automatically strip out all output cell contents before committing to `git`, 
 ## Package your Kedro project
 
 [Further information about building project documentation and packaging your project](https://docs.kedro.org/en/stable/tutorial/package_a_project.html)
+
+
+## Setup Credentials.yml
+
+```yaml
+azure_blob_credentials:
+  account_name: 
+  account_key: 
+
+smtp:
+  host: 
+  port: 
+  user: 
+  password: 
+
+proxies:
+  - "proxy1:port1"
+  - "proxy2:port2"
+  - "proxy3:port3"
+  - "proxy4:port4"
+  - "proxy5:port5"
+  - "proxy6:port6"
+  - "proxy7:port7"
+  - "proxy8:port8"
+  - "proxy9:port9"
+  - "proxy10:port10"
+```
+
+Proxies should be the same number as Scrapy CrawlerProcess (Default: 10)

@@ -2,3 +2,9 @@ ipython>=8.10
 jupyterlab>=3.0
 kedro~=0.19.9
 notebook
+pandas
+numpy
+scrapy
+kedro-datasets
+adlfs
+openpyxl
