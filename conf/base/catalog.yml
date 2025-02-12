@@ -26,3 +26,7 @@ scraping_results:
   versioned: True
   save_args:
     ensure_ascii: False
+
+send_start_email_result:
+  type: kedro_datasets.json.JSONDataset
+  filepath: data/08_reporting/send_start_email_result.json

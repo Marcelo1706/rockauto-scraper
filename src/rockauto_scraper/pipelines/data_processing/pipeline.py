@@ -10,6 +10,7 @@ from .nodes import (
     read_and_split_oem_data,
     run_spiders_in_parallel,
     send_email_with_file_link,
+    send_start_email,
 )
 
 
@@ -17,8 +18,14 @@ def create_pipeline(**kwargs) -> Pipeline:
     return Pipeline(
         [
             node(
+                func=send_start_email,
+                inputs=["params:recipient"],
+                outputs="send_start_email_result",
+                name="send_start_email_node"
+            ),
+            node(
                 func=read_and_split_oem_data,
-                inputs="oem_data",
+                inputs=["send_start_email_result", "oem_data"],
                 outputs=[f"oem_split_{i}" for i in range(10)],
                 name="read_and_split_oem_data_node"
             ),

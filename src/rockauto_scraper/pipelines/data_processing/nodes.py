@@ -5,6 +5,7 @@ generated using Kedro 0.19.9
 import logging
 import smtplib
 import ssl
+from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import COMMASPACE, formatdate
@@ -28,7 +29,7 @@ items = []
 def collect_items(item, response, spider):
     items.append(item)
 
-def read_and_split_oem_data(data: pd.DataFrame, num_splits: int = 10) -> list:
+def read_and_split_oem_data(email_result: str, data: pd.DataFrame, num_splits: int = 10) -> list:
     """
     Split the data into num_splits parts
     """
@@ -118,3 +119,35 @@ def send_email_with_file_link(excel_output, recipient):
         server.sendmail(smtp_credentials["user"], recipient, message.as_string())
 
     logger.info("Email sent successfully")
+
+
+def send_start_email(recipient):
+    conf_path = str(Path.cwd() / "conf")
+    conf_loader = OmegaConfigLoader(conf_source=conf_path)
+    credentials = conf_loader.get("credentials")
+    smtp_credenials = credentials["smtp"]
+
+    message = MIMEMultipart()
+    message["From"] = smtp_credenials["user"]
+    message["To"] = COMMASPACE.join(recipient)
+    message["Date"] = formatdate(localtime=True)
+    message["Subject"] = "Inicio de proceso de scraping"
+
+    message.attach(MIMEText(
+        f"""
+        El proceso de scraping de Rockauto ha iniciado.
+        Fecha: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}
+
+        Este correo ha sido enviado de manera automática, por favor no responder.
+        """
+    ))
+
+    context = ssl.create_default_context()
+    with smtplib.SMTP(smtp_credenials["host"], smtp_credenials["port"]) as server:
+        server.ehlo()
+        server.starttls(context=context)
+        server.ehlo()
+        server.login(smtp_credenials["user"], smtp_credenials["password"])
+        server.sendmail(smtp_credenials["user"], recipient, message.as_string())
+
+    return {"result": "Email sent successfully!"}
