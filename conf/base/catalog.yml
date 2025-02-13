@@ -4,7 +4,7 @@
 # Link: https://docs.kedro.org/en/stable/data/data_catalog.html
 oem_data:
   type: pandas.CSVDataset
-  filepath: abfs://impressa-oems/oems.csv
+  filepath: abfs://conte-oem/oems.csv
   load_args:
     header:
     names:
@@ -15,13 +15,13 @@ oem_data:
 
 excel_output:
   type: pandas.CSVDataset
-  filepath: abfs://results/resultados.csv
+  filepath: abfs://conte-resultados/resultados.csv
   credentials: azure_blob_credentials
   versioned: True
 
 scraping_results:
   type: kedro_datasets.json.JSONDataset
-  filepath: abfs://json-data/scraping_results.json
+  filepath: abfs://conte-log/scraping_results.json
   credentials: azure_blob_credentials
   versioned: True
   save_args:
